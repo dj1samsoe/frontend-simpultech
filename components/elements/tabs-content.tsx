@@ -35,7 +35,7 @@ export function TaskTabContent({ data }: TaskTabContentProps) {
   });
   const [showForm, setShowForm] = useState(false);
 
-  const handleChange = async (id: number, completed: boolean) => {
+  const handleChange = async (id: string, completed: boolean) => {
     try {
       const response = await fetch("/api/task", {
         method: "POST",

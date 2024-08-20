@@ -19,7 +19,7 @@
     "id": "3",
     "title": "Set up appointment with Dr Blake",
     "description": "No Description",
-    "completed": true,
+    "completed": false,
     "date": "2021-06-22",
     "dueDate": "10 Day Left"
   },

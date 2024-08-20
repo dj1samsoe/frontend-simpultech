@@ -29,26 +29,38 @@ export async function GET(request: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const { id, completed } = await req.json();
+    if (typeof id !== "string" || typeof completed !== "boolean") {
+      return new NextResponse(JSON.stringify({ error: "Invalid input data" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const filePath = path.join(process.cwd(), "public", "task.json");
     const fileContents = await fs.readFile(filePath, "utf8");
-    const tasks = JSON.parse(fileContents);
-    const { id, completed } = await req.json();
-    const updatedTasks = tasks.map((task: Task) =>
+    const tasks = JSON.parse(fileContents) as Task[];
+
+    const updatedTasks = tasks.map((task) =>
       task.id === id ? { ...task, completed } : task
     );
 
-    const response = await fs.writeFile(
-      filePath,
-      JSON.stringify(updatedTasks, null, 2),
-      "utf8"
-    );
+    await fs.writeFile(filePath, JSON.stringify(updatedTasks, null, 2), "utf8");
 
-    return new NextResponse(JSON.stringify({ success: true, response }), {
+    return new NextResponse(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error updating task:", error);
-    return new NextResponse("Error updating task", { status: 500 });
+
+    // Memeriksa tipe error dan menangani pesan kesalahan
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+
+    return new NextResponse(
+      JSON.stringify({ error: "Error updating task", message: errorMessage }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }
