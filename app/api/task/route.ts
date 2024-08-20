@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { Task } from "@/types/task";
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,30 +32,17 @@ export async function PUT(request: NextRequest) {
     const filePath = path.join(process.cwd(), "public", "task.json");
     const fileContents = await fs.readFile(filePath, "utf8");
     const tasks = JSON.parse(fileContents);
-
     const { id, completed } = await request.json();
-
-    // Find the task by id and update its completed status
     const updatedTasks = tasks.map((task: any) =>
       task.id === id ? { ...task, completed } : task
     );
-
-    // Save the updated tasks back to the file
     await fs.writeFile(filePath, JSON.stringify(updatedTasks, null, 2), "utf8");
-
     return new NextResponse(JSON.stringify({ success: true }), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error updating task:", error);
-    return new NextResponse("Error updating task", {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return new NextResponse("Error updating task", { status: 500 });
   }
 }
