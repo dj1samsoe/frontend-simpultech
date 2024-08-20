@@ -1,6 +1,6 @@
 export interface ChatMessage {
-  group_id: string;
-  group_name: string;
+  groupId: string;
+  groupName: string;
   messages: Message[];
 }
 

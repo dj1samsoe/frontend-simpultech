@@ -1,4 +1,3 @@
-// components/task-tab-content.tsx
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -21,6 +20,8 @@ import { Separator } from "../ui/separator";
 import { DatePicker } from "../ui/date-picker";
 import { FaRegClock } from "react-icons/fa6";
 import { ImPencil } from "react-icons/im";
+import { updateTaskAction } from "../action/task-action";
+import { format } from "date-fns";
 
 interface TaskTabContentProps {
   data: Task[];
@@ -37,20 +38,7 @@ export function TaskTabContent({ data }: TaskTabContentProps) {
 
   const handleChange = async (id: string, completed: boolean) => {
     try {
-      const response = await fetch("/api/task", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, completed }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update task");
-      }
-
-      // Optionally handle the response data
-      const result = await response.json();
+      const result = await updateTaskAction(id, completed);
 
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
@@ -109,7 +97,9 @@ export function TaskTabContent({ data }: TaskTabContentProps) {
                   {task.completed === false && (
                     <p className="text-indicator-accent">{task.dueDate}</p>
                   )}
-                  <p className="text-theme-secondary">{task.date}</p>
+                  <p className="text-theme-secondary">
+                    {format(task.date, "dd/MM/yyyy")}
+                  </p>
                   <FaChevronDown />
                   <MdOutlineMoreHoriz />
                 </div>
@@ -192,9 +182,7 @@ export function InboxTabContent({ data }: InboxTabContentProps) {
         {isInChatRoom ? (
           <ChatRoom
             groupName={activeGroupName}
-            chatData={data.filter(
-              (chat) => chat.group_name === activeGroupName
-            )}
+            chatData={data.filter((chat) => chat.groupName === activeGroupName)}
             leaveChatRoom={leaveChatRoom}
           />
         ) : (

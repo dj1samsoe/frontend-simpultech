@@ -12,6 +12,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 import { CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Input } from "../ui/input";
+import { format, formatDate } from "date-fns";
 
 export default function ChatRoom({
   groupName,
@@ -41,7 +42,7 @@ export default function ChatRoom({
       </CardHeader>
       <CardContent className="flex flex-col gap-4 items-start h-full my-10 p-4 overflow-y-auto">
         {chatData.map((item, index) => (
-          <div key={item.group_id} className="flex flex-col w-full text-sm">
+          <div key={item.groupId} className="flex flex-col w-full text-sm">
             {item.messages.map((message) => (
               <div
                 key={message.id}
@@ -57,7 +58,7 @@ export default function ChatRoom({
                     <div className="grid grid-cols-3 gap-4 items-center">
                       <Separator className="h-[2px] bg-theme-secondary" />
                       <p className="text-center font-semibold">
-                        Today {message.date}
+                        Today {formatDate(message.date, "dd/MM/yyyy")}
                       </p>
                       <Separator className="h-[2px] bg-theme-secondary" />
                     </div>
@@ -91,7 +92,7 @@ export default function ChatRoom({
                   {message.name !== "You" ? (
                     <>
                       <div
-                        className={`max-w-md px-4 py-2 rounded-lg shadow flex flex-col space-y-2 items-start ${
+                        className={`max-w-md px-4 py-2 rounded-lg shadow flex flex-col space-y-3 items-start ${
                           message.name === "You"
                             ? "bg-chats-secondary-background text-theme-secondary"
                             : message.name === "Obaidullah Amarkhil"
@@ -101,7 +102,7 @@ export default function ChatRoom({
                       >
                         {message.body}
                         <div className="text-xs text-theme-secondary">
-                          {message.time}
+                          {format(message.time, "HH:mm")}
                         </div>
                       </div>
                       <Popover>
@@ -156,7 +157,7 @@ export default function ChatRoom({
                         </PopoverContent>
                       </Popover>
                       <div
-                        className={`max-w-md px-4 py-2 rounded-lg shadow flex flex-col space-y-2 items-start ${
+                        className={`max-w-md px-4 py-2 rounded-lg shadow flex flex-col space-y-3 items-start ${
                           message.name === "You"
                             ? "bg-chats-secondary-background text-theme-secondary"
                             : message.name === "Obaidullah Amarkhil"
@@ -166,7 +167,7 @@ export default function ChatRoom({
                       >
                         {message.body}
                         <div className="text-xs text-theme-secondary">
-                          {message.time}
+                          {format(message.time, "HH:mm")}
                         </div>
                       </div>
                     </>

@@ -10,6 +10,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { useState, useEffect } from "react";
 import { InboxTabContent, TaskTabContent } from "./tabs-content";
 import { ImSpinner2 } from "react-icons/im";
+import { TaskUseCase } from "@/usecase/task";
+import { GroupChatUseCase } from "@/usecase/group-chat";
 
 interface QuickTabsProps {
   className?: string;
@@ -37,6 +39,9 @@ export default function QuickTabs({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const taskUseCase = new TaskUseCase();
+  const groupChatUseCase = new GroupChatUseCase();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

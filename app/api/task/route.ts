@@ -1,20 +1,15 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import { Task } from "@/types/task";
+import { TaskUseCase } from "@/usecase/task";
 
-export async function GET(request: NextRequest) {
+const usecase = new TaskUseCase();
+
+export async function GET(req: NextRequest) {
   try {
-    const filePath = path.join(process.cwd(), "public", "task.json");
-    const fileContents = await fs.readFile(filePath, "utf8");
-    const data = JSON.parse(fileContents);
-
+    const data = await usecase.getAllTask();
     return new NextResponse(JSON.stringify(data), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -33,23 +28,19 @@ export async function POST(req: NextRequest) {
     if (typeof id !== "string" || typeof completed !== "boolean") {
       return new NextResponse(JSON.stringify({ error: "Invalid input data" }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
     }
 
-    const filePath = path.join(process.cwd(), "public", "task.json");
-    const fileContents = await fs.readFile(filePath, "utf8");
-    const tasks = JSON.parse(fileContents) as Task[];
+    const result = await usecase.updateTask(id, completed);
 
-    const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, completed } : task
-    );
-
-    await fs.writeFile(filePath, JSON.stringify(updatedTasks, null, 2), "utf8");
-
-    return new NextResponse(JSON.stringify({ success: true }), {
+    return new NextResponse(JSON.stringify(result), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
   } catch (error) {
     console.error("Error updating task:", error);

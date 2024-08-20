@@ -1,15 +1,13 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { GroupChatUseCase } from "@/usecase/group-chat";
+
+const usecase = new GroupChatUseCase();
 
 export async function GET(request: NextRequest) {
   try {
-    const filePath = path.join(process.cwd(), "public", "group-chat.json");
-    const fileContents = await fs.readFile(filePath, "utf8");
-    const data = JSON.parse(fileContents);
-
-    return new NextResponse(JSON.stringify(data), {
+    const response = await usecase.getAllGroupChat();
+    return new NextResponse(JSON.stringify(response), {
       status: 200,
       headers: {
         "Content-Type": "application/json",

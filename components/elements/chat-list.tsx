@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { FaRegUser } from "react-icons/fa6";
 import { CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
+import { formatDate } from "date-fns";
 
 export default function ChatList({ chatData, enterChatRoom }: ChatListProps) {
   return (
@@ -30,7 +31,7 @@ export default function ChatList({ chatData, enterChatRoom }: ChatListProps) {
           <div
             key={index}
             className="flex flex-col w-full items-start space-y-3 cursor-pointer hover:bg-theme-foreground/50 transition-all p-2 rounded-md"
-            onClick={() => enterChatRoom(message.group_name)}
+            onClick={() => enterChatRoom(message.groupName)}
           >
             <div className="flex items-end justify-between w-full">
               <div className="flex items-start">
@@ -45,24 +46,25 @@ export default function ChatList({ chatData, enterChatRoom }: ChatListProps) {
                 <div className="flex flex-col space-y-2 items-start">
                   <div className="flex items-center space-x-2">
                     <h1 className="font-medium text-theme-primary leading-none">
-                      {message.group_name}
+                      {message.groupName}
                     </h1>
                     <p className="text-xs text-theme-secondary">
-                      {message.messages[4].date} {message.messages[4].time}
+                      {formatDate(message.messages[0].date, "dd/MM/yyyy")}{" "}
+                      {formatDate(message.messages[0].time, "HH:mm")}
                     </p>
                   </div>
                   <div className="flex flex-col w-full">
                     <p className="text-sm font-semibold text-theme-secondary">
-                      {message.messages[4].name} :
+                      {message.messages[0].name} :
                     </p>
 
                     <p className="text-sm text-theme-secondary">
-                      {message.messages[4].body.slice(0, 20)}...
+                      {message.messages[0].body.slice(0, 20)}...
                     </p>
                   </div>
                 </div>
               </div>
-              {message.messages[4].is_new === true && (
+              {message.messages[0].is_new === true && (
                 <span className="w-2 h-2 rounded-full bg-indicator-accent -translate-y-2"></span>
               )}
             </div>
