@@ -51,17 +51,13 @@ export default function QuickTabs({
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-
-      // Create a delay promise
-      const delayPromise = new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
-
-      // Fetch the data
-      const dataFetchPromise = fetch(dataUrl).then((response) =>
-        response.json()
-      );
-
-      // Wait for both the data fetch and the delay to complete
-      const [data] = await Promise.all([dataFetchPromise, delayPromise]);
+      const response = await fetch(dataUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
 
       setData(data);
       setIsLoading(false);

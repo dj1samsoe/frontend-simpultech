@@ -38,7 +38,7 @@ export function TaskTabContent({ data }: TaskTabContentProps) {
   const handleChange = async (id: number, completed: boolean) => {
     try {
       const response = await fetch("/api/task", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },

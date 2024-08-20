@@ -27,16 +27,18 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const filePath = path.join(process.cwd(), "public", "task.json");
     const fileContents = await fs.readFile(filePath, "utf8");
     const tasks = JSON.parse(fileContents);
-    const { id, completed } = await request.json();
-    const updatedTasks = tasks.map((task: any) =>
+    const { id, completed } = await req.json();
+    const updatedTasks = tasks.map((task: Task) =>
       task.id === id ? { ...task, completed } : task
     );
+
     await fs.writeFile(filePath, JSON.stringify(updatedTasks, null, 2), "utf8");
+
     return new NextResponse(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
