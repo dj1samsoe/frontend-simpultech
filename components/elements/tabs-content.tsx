@@ -49,6 +49,9 @@ export function TaskTabContent({ data }: TaskTabContentProps) {
         throw new Error("Failed to update task");
       }
 
+      // Optionally handle the response data
+      const result = await response.json();
+
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === id ? { ...task, completed } : task

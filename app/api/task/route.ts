@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const filePath = path.join(process.cwd(), "public", "task.json");
     const fileContents = await fs.readFile(filePath, "utf8");
@@ -37,9 +37,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
       task.id === id ? { ...task, completed } : task
     );
 
-    await fs.writeFile(filePath, JSON.stringify(updatedTasks, null, 2), "utf8");
+    const response = await fs.writeFile(
+      filePath,
+      JSON.stringify(updatedTasks, null, 2),
+      "utf8"
+    );
 
-    return new NextResponse(JSON.stringify({ success: true }), {
+    return new NextResponse(JSON.stringify({ success: true, response }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
