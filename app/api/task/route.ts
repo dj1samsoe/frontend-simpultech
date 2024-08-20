@@ -27,7 +27,6 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  "use server";
   try {
     const filePath = path.join(process.cwd(), "public", "task.json");
     const fileContents = await fs.readFile(filePath, "utf8");
